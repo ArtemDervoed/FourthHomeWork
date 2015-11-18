@@ -49,14 +49,14 @@ public class Matrix {
   
     public double[][] multiply(double[][] multi) {
 	
-    	if(multi == null) return null;
-			else if((matrix.length < multi[0].length)||(multi.length < matrix[0].length)){
-				double[][] result = new double[matrix.length][multi[0].length];
-				if(matrix[0].length >= multi[0].length){
-					for (int i = 0; i < result.length; i++){
-						for (int j = 0 ; j < result[0].length;j++){
-							for (int k = 0 ; k < result.length; k++){
-								result[i][j]+=matrix[i][k]*multi[k][j];
+        if(multi == null) return null;
+            else if((matrix.length < multi[0].length)||(multi.length < matrix[0].length)){
+                double[][] result = new double[matrix.length][multi[0].length];
+                if(matrix[0].length >= multi[0].length){
+                    for (int i = 0; i < result.length; i++){
+                        for (int j = 0 ; j < result[0].length;j++){
+                            for (int k = 0 ; k < result.length; k++){
+                                result[i][j]+=matrix[i][k]*multi[k][j];
                             }
                         }
                      }     
