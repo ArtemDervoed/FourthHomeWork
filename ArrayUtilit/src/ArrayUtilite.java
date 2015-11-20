@@ -16,23 +16,28 @@ public class ArrayUtilite {
         } else {
             return array;
         }
-        }
+    }
 
-    public void shuffle(int[] array) {
-        Random rnd = new Random();
-        for (int i = array.length - 1; i > 0; i--) {
-        int index = rnd.nextInt(i + 1);
-            int a = array[index];
-            array[index] = array[i];
-            array[i] = a;
+    public int[] shuffle(int[] array) {
+        if (!isNull(array)) {
+            Random rnd = new Random();
+            for (int i = array.length - 1; i > 0; i--) {
+                int index = rnd.nextInt(i + 1);
+                int a = array[index];
+                array[index] = array[i];
+                array[i] = a;
+            }
+        } else {
+            return null;
         }
+        return array;
     }
 
     private boolean isNull(int[] data) {
-    if (data == null) {
+        if (data == null) {
             return true;
         } else {
-             return false;
+            return false;
         }
     }
 
@@ -44,7 +49,7 @@ public class ArrayUtilite {
 
     public boolean equal(int[] first, int[] second) {
         boolean check = true;
-            if (first.length == second.length) {
+        if (first.length == second.length) {
             Arrays.sort(first);
             Arrays.sort(second);
             for (int i = 0; i < first.length; i++) {
@@ -53,7 +58,8 @@ public class ArrayUtilite {
                     break;
                 }
             }
-        } else return false;
+        } else
+            return false;
         return check;
     }
 }

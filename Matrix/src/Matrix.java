@@ -8,7 +8,7 @@ public class Matrix {
     }
 
     public double getElement(int row, int grid) {
-    return matrix[row][grid];
+        return matrix[row][grid];
     }
 
     public void setElement(double data, int row, int grid) {
@@ -16,40 +16,57 @@ public class Matrix {
         matrix[row][grid] = data;
     }
 
-    public double[][] summ(double[][] summer) {
-        if (summer != null) {
-            if ((matrix.length == summer.length) && (matrix[0].length == summer[0].length)) {
-                for (int i = 0; i < matrix.length; i++) {
-                    for (int j = 0; j < matrix[0].length; j++) {
-                        matrix[i][j] += summer[i][j];
-                    }
-                }
-            } else {
-                return null;
-            }
+    public double[][] summ(double[][] items) {
+        if (isCorrect(items)) {
+            operationSum(items);
         } else {
             return null;
         }
         return matrix;
     }
 
-    public double[][] difference(double[][] differenser) {
-        if (differenser != null) {
-            if ((matrix.length == differenser.length) && (matrix[0].length == differenser[0].length)) {
-                for (int i = 0; i < matrix.length; i++) {
-                    for (int j = 0; j < matrix[0].length; j++) {
-                        matrix[i][j] -= differenser[i][j];
-                    }
-                }
-            } else {
-                return null;
-            }
+    public double[][] difference(double[][] items) {
+        if (isCorrect(items)) {
+            operationDifferense(items);
         } else {
-			return null;
+            return null;
+        }
+        return matrix;
+    }
+    //////////////////////////////////////////////////////////////////////////////////////////
+
+    private boolean isCorrect(double[][] items) {
+        boolean check = false;
+        if (items != null) {
+            if ((matrix.length == items.length) && (matrix[0].length == items[0].length)) {
+                check = true;
+                return check;
+            } else {
+                return check;
+            }
+        }
+        return check;
+    }
+
+    private double[][] operationSum(double[][] items) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                matrix[i][j] += items[i][j];
+            }
         }
         return matrix;
     }
 
+    private double[][] operationDifferense(double[][] items) {
+        for (int i = 0; i < matrix.length; i++) {
+            for (int j = 0; j < matrix[0].length; j++) {
+                matrix[i][j] -= items[i][j];
+            }
+        }
+        return matrix;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
     public double[][] multiply(double[][] secondMylty) {
         if (matrix == null || secondMylty == null) {
             return null;
@@ -69,59 +86,87 @@ public class Matrix {
         return result;
     }
 
-    public double determinant() {
+    private boolean IsSquare(double[][] items) {
+        if (matrix[0].length == matrix.length) {
+            return true;
+        } else
+            return false;
+    }
 
-        int n = matrix.length;
+    public double determinant() {
         double determinant = 1.0;
-        double[][] worker = new double[n][n];
-        int[] row = new int[n];
-        int hold;
-        int iPivot;
-        double pivot;
-        double absPivot; 
-        if (matrix[0].length != n) {
+        double[][] worker = new double[matrix.length][matrix.length];
+        if (!IsSquare(matrix)) {
             return 0;
         }
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++)
-                worker[i][j] = matrix[i][j];
-        for (int k = 0; k < n; k++) {
-            row[k] = k;
+        if (!isCorrect(worker)) {
+            return 0;
+        } else {
+            int[] row = new int[matrix.length];
+            double pivot;
+            int iPivot;
+            double absPivot;
+            for (int k = 0; k < matrix.length - 1; k++) {
+                pivot = worker[row[k]][k];
+                absPivot = Math.abs(pivot);
+                iPivot = k;
+                searchRowWithMinFirstitem(worker, row, determinant, iPivot, absPivot, pivot);
+                chekPivot(worker, row, k, determinant, iPivot);
+                checkAbs(absPivot);
+                toDiagonal(worker, row, k);
+                finalPart(worker, row, k);
+                determinant = determinant * pivot;
+            }
+            return determinant * worker[row[matrix.length - 1]][matrix.length - 1];
         }
-        for (int k = 0; k < n - 1; k++) {
-        pivot = worker[row[k]][k];
-        absPivot = Math.abs(pivot);
-        iPivot = k;
-            for (int i = k; i < n; i++) {
+    }
+
+    private void searchRowWithMinFirstitem(double[][] worker, int[] row, 
+                                           double determinant, int iPivot,
+                                           double absPivot, double pivot) {
+        for (int k = 0; k < worker.length - 1; k++) {
+            pivot = worker[row[k]][k];
+            absPivot = Math.abs(pivot);
+            iPivot = k;
+            for (int i = k; i < worker.length; i++) {
                 if (Math.abs(worker[row[i]][k]) > absPivot) {
                     iPivot = i;
                     pivot = worker[row[i]][k];
                     absPivot = Math.abs(pivot);
                 }
             }
-            if (iPivot != k) {
-                hold = row[k];
-                row[k] = row[iPivot];
-                row[iPivot] = hold;
-                determinant = -determinant;
-            }
-            if (absPivot < 1.0E-10) {
-                return 0.0;
-            } else {
-                determinant = determinant * pivot;
-                    for (int j = k + 1; j < n; j++) {
-                        worker[row[k]][j] = worker[row[k]][j] / worker[row[k]][k];
-                    }
-                for (int i = 0; i < n; i++) {
-                    if (i != k) {
-                        for (int j = k + 1; j < n; j++) {
-                            worker[row[i]][j] = worker[row[i]][j] - worker[row[i]][k] * worker[row[k]][j];
-                        }
-                    }
+        }
+    }
+    private void chekPivot(double[][] worker, int[] row, int k, double determinant, int iPivot) {
+        int hold;
+        if (iPivot != k) {
+            hold = row[k];
+            row[k] = row[iPivot];
+            row[iPivot] = hold;
+            determinant = -determinant;
+        }
+    }
+    private void toDiagonal(double[][] worker, int[] row, int k) {
+        for (int j = k + 1; j < worker.length; j++) {
+            worker[row[k]][j] = worker[row[k]][j] / worker[row[k]][k];
+        }
+    }
+
+    private void finalPart(double[][] worker, int[] row, int k) {
+        for (int i = 0; i < worker.length; i++) {
+            if (i != k) {
+                for (int j = k + 1; j < worker.length; j++) {
+                    worker[row[i]][j] = worker[row[i]][j] - worker[row[i]][k] * worker[row[k]][j];
                 }
             }
         }
-        return determinant * worker[row[n - 1]][n - 1];
+    }
+
+    private double checkAbs(double absPivot) {
+        if (absPivot < 1.0E-10) {
+            return 0.0;
+        }
+        return absPivot;
     }
 
     private int[] searchRowWithFirstMinItem(int[] row) {
