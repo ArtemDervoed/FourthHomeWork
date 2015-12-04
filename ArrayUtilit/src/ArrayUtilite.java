@@ -20,6 +20,24 @@ public class ArrayUtilite {
         }
     }
 
+    public int[] filter(int[] worker, Predicate predicate, int number) {
+        try {
+            if (predicate.getType() == 0) {
+                return predicate.divadedOn(worker, number);
+            }
+            if (predicate.getType() == 1) {
+                return predicate.moreThan(worker, number);
+            }
+            if (predicate.getType() == 2) {
+                return predicate.lessThan(worker, number);
+            }
+            return worker;
+        } catch (Exception e) {
+            
+            return worker;
+        }
+    }
+
     public int[] cut(int[] elements, int limit) {
         int count = 0;
         for (int i = 0; i < elements.length; i++) {
@@ -49,7 +67,7 @@ public class ArrayUtilite {
                 array[i] = a;
             }
         } catch (Exception e) {
-        e.getMessage();
+            e.getMessage();
         } finally {
             return array;
         }

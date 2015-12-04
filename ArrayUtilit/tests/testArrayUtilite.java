@@ -13,7 +13,6 @@ public class testArrayUtilite {
 
     @Test
     public void testChangeOfSizeLower() throws Exception {
-
         assertArrayEquals(tester.changeSize(firstTesting, 1), secondTing);
     }
 
@@ -25,7 +24,6 @@ public class testArrayUtilite {
 
     @Test
     public void testChangeOfSizeNull() throws Exception {
-
         assertArrayEquals(tester.changeSize(null, 3), testingNull);
     }
 
@@ -53,7 +51,6 @@ public class testArrayUtilite {
             assertTrue(true);
         } else
             assertFalse(false);
-
     }
 
     @Test
@@ -63,7 +60,17 @@ public class testArrayUtilite {
         if (first == null) {
             assertNull("Null", first);
         }
-
     }
-
+    @Test
+    public void testFilterOfData() throws Exception {
+        int[] first = { 1, 2, 3, 4, 5, 6 };
+        int[] third = { 1, 2 };
+        assertArrayEquals(tester.filter(first, new Predicate(2), 3), third);
+    }
+    @Test
+    public void testFilterDataIsNotCorrect() throws Exception {
+        int[] first = { 1, 2, 3, 4, 5, 6 };
+        int[] third = { 1, 2 };
+        assertArrayEquals(tester.filter(first, new Predicate(2), -1), first);
+    }
 }
